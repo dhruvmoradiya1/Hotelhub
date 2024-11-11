@@ -1,6 +1,6 @@
 FROM node:20.18.0 AS build
 
-WORKDIR /app 
+WORKDIR /backend 
 
 COPY package*.json .
 
@@ -12,11 +12,13 @@ RUN npm run build
 
 FROM node:alpine AS final_image
 
-WORKDIR /app
+WORKDIR /backend
 
-COPY package*.json .
+COPY --from=build /backend/package*.json ./
 
-COPY --from=build /app/dist ./dist
+COPY --from=build /backend/dist ./dist
+
+COPY --from=final_build /frontend/dist ./frontend/dist
 
 RUN npm install --only=production
 

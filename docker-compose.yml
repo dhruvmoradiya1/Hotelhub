@@ -1,15 +1,27 @@
 version: '3.8'
 
 services:
+  build:
+    context: ./nginx
+    dockerfile: Dockerfile
+    ports:
+      - "80:80"  # Expose NGINX on port 80
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro  # Mount custom NGINX config
+      - ./frontend/build:/usr/share/nginx/html  # Serve frontend build files
+    depends_on:
+      - frontend
+      - backend
+    networks:
+      - mern-network
+
   backend:
     build:
       context: ./backend
       dockerfile: Dockerfile
-      target: final_image
+      target: final_image  # Assuming multi-stage build with this target
     ports:
-      - "3000:3000"
-    depends_on:
-      - frontend
+      - "3000:3000"  # Expose backend service on port 3000
     env_file:
       - ./backend/.env
     networks:
@@ -19,8 +31,8 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile
-    ports:
-      - "5173:5173"
+    expose:
+      - "80"  # Expose frontend internally (NGINX will access it)
     networks:
       - mern-network
     env_file:

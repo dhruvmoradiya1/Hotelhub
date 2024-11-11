@@ -1,16 +1,36 @@
+# Stage 1: Build the frontend app
 FROM node:alpine AS build
 
-WORKDIR /app 
+# Set the working directory
+WORKDIR /frontend
 
-COPY package*.json .
+# Copy package.json and package-lock.json (or yarn.lock)
+COPY package*.json ./
 
-RUN npm ci 
+# Install dependencies
+RUN npm ci
 
+# Copy the rest of the app's source code
 COPY . .
 
-EXPOSE 5173
+# Build the app for production
+RUN npm run build
 
-CMD ["npm", "run", "dev"] 
+# Stage 2: Set up NGINX to serve the built app
+FROM nginx:alpine
+
+# Copy the built frontend app into the NGINX container
+COPY --from=build /frontend/build /usr/share/nginx/html
+
+# Copy the custom NGINX configuration
+COPY ./nginx/nginx.conf /etc/nginx/nginx.conf
+
+# Expose port 80 (default NGINX port)
+EXPOSE 80
+
+# Start NGINX when the container runs
+CMD ["nginx", "-g", "daemon off;"]
+
 
 # docker build -t mern_frontend:latest .    
 
