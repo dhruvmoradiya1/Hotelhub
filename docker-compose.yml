@@ -5,6 +5,7 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
+      target: final_image
     ports:
       - "3000:3000"
     env_file:
