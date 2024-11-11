@@ -1,0 +1,89 @@
+# Node dependencies and build output
+node_modules
+dist
+build
+
+# Git and Docker files
+.git
+Dockerfile
+docker-compose.yml
+
+# Logs
+*.log
+
+# IDE/editor config files
+.vscode
+.idea
+*.swp
+
+# Environment files (to avoid leaking sensitive data into the Docker image)
+.env
+.env.local
+*.env.*
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+
+
+# Stage 1: Build the frontend
+#FROM node:18.17 as fr_build
+#
+## Set the working directory for frontend
+#WORKDIR /frontend
+#
+## Copy package files and install dependencies (cache efficient)
+#COPY ./frontend/package*.json ./
+#RUN npm ci
+#
+## Copy the rest of the frontend code
+#COPY ./frontend .
+#
+## Build the frontend
+#RUN npm run build
+#
+## Stage 2: Copy frontend build output
+#FROM alpine:3.18 as final_build_frontend
+#
+#WORKDIR /frontend
+#
+## Copy the built frontend assets from the build stage
+#COPY --from=fr_build /frontend/dist ./dist
+#
+## Stage 3: Build the backend
+#FROM node:18.17 as build
+#
+## Set the working directory for backend
+#WORKDIR /backend
+#
+## Copy package files and install dependencies (cache efficient)
+#COPY ./backend/package*.json ./
+#RUN npm ci
+#
+## Copy the rest of the backend code
+#COPY ./backend .
+#
+## Build the backend
+#RUN npm run build
+#
+## Stage 4: Create production-ready backend image
+#FROM node:18-alpine3.20 as final
+#
+## Set the working directory for the backend in production
+#WORKDIR /backend
+#
+## Copy the built backend artifacts and dependencies
+#COPY --from=build /backend/dist ./dist
+#COPY --from=build /backend/package*.json ./
+#COPY --from=build /backend/node_modules ./node_modules
+#
+## Expose the port the app runs on
+#EXPOSE 3000
+#
+## Optional: Add a health check
+#HEALTHCHECK --interval=30s --timeout=10s --start-period=5s CMD curl --fail http://localhost:3000/health || exit 1
+#
+## Start the server
+#CMD ["npm", "start"]
+#

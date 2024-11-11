@@ -1,0 +1,26 @@
+# Node dependencies and build output
+node_modules
+dist
+build
+
+# Git and Docker files
+.git
+Dockerfile
+docker-compose.yml
+
+# Logs
+*.log
+
+# IDE/editor config files
+.vscode
+.idea
+*.swp
+
+# Environment files (to avoid leaking sensitive data into the Docker image)
+#.env
+#.env.local
+#*.env.*
+
+# OS-specific files
+.DS_Store
+Thumbs.db
