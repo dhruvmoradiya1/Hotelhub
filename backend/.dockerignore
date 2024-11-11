@@ -17,9 +17,9 @@ docker-compose.yml
 *.swp
 
 # Environment files (to avoid leaking sensitive data into the Docker image)
-#.env
-#.env.local
-#*.env.*
+.env
+.env.local
+*.env.*
 
 # OS-specific files
 .DS_Store

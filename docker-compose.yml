@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+      target: final_image
+    ports:
+      - "3000:3000"
+    depends_on:
+      - frontend
+    env_file:
+      - ./backend/.env
+    networks:
+      - mern-network
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "5173:5173"
+    networks:
+      - mern-network
+    env_file:
+      - ./frontend/.env
+
+networks:
+  mern-network:
+    driver: bridge

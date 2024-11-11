@@ -4,15 +4,27 @@ WORKDIR /app
 
 COPY package*.json .
 
-COPY .env .env
-
 RUN npm install
+
+COPY . .
+
+RUN npm run build
+
+FROM node:alpine AS final_image
+
+WORKDIR /app
+
+COPY package*.json .
+
+COPY --from=build /app/dist ./dist
+
+RUN npm install --only=production
 
 COPY . .
 
 EXPOSE 3000
 
-CMD ["npm", "run", "dev"]
+CMD ["npm", "start"]
 
 # docker build -t mern_backend:latest .
 
