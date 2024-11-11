@@ -1,19 +1,14 @@
-version: '3.8'
+version: '3'
 
 services:
   backend:
     build:
       context: ./backend
       dockerfile: Dockerfile
-      target: final_image
     ports:
       - "3000:3000"
-    depends_on:
-      - frontend
     env_file:
-      - ./backend/.env
-    volumes:
-      - ./backend:/app/backend  
+      - ./backend/.env 
     networks:
       - mern-network
 
@@ -25,9 +20,14 @@ services:
       - "5173:5173"
     networks:
       - mern-network
+    depends_on:
+      - backend  
     env_file:
       - ./frontend/.env
 
 networks:
   mern-network:
     driver: bridge
+
+    # docker-compose up --build -d
+

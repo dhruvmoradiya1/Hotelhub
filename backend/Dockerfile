@@ -18,8 +18,6 @@ COPY --from=build /backend/package*.json ./
 
 COPY --from=build /backend/dist ./dist
 
-COPY --from=final_build /frontend/dist ./frontend/dist
-
 RUN npm install --only=production
 
 COPY . .
