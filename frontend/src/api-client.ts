@@ -7,7 +7,8 @@ import {
   UserType,
 } from "./shared/types";
 import { BookingFormData } from "./forms/BookingForm/BookingForm";
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "";
+
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || import.meta.env.VITE_API_BASE_AWS_URL || "";
 
 export const getProfile = async (): Promise<UserType> => {
   const response = await fetch(`${API_BASE_URL}/api/my-profile/profile`, {
