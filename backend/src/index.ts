@@ -26,7 +26,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(
   cors({
-    origin: process.env.FRONTEND_URL || process.env.FRONTEND_URL_AWS,
+    origin: process.env.FRONTEND_URL || process.env.FRONTEND_URL_AWS || process.env.FRONTEND_URL_LOCALHOST,
     credentials: true,
   })
 );
