@@ -16,9 +16,28 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-mongoose.connect(process.env.MONGODB_CONNECTION_STRING as string || process.env.MONGODB_CONNECTION_STRING_LOCAL as string)
- .then(() => console.log("MongoDB connected With Clusters Database"))
- .catch((err) => console.log("Failed to connect to MongoDB:",err));
+ const connectToDatabase = async () => {
+  const clusterURI = process.env.MONGODB_CONNECTION_STRING as string;
+  const localURI = process.env.MONGODB_CONNECTION_STRING_LOCAL as string;
+
+  try {
+    console.log("Trying to connect to MongoDB Cluster...");
+    await mongoose.connect(clusterURI); // Simplified connection
+    console.log("MongoDB connected to Cluster Database");
+  } catch (err) {
+    console.error("Cluster connection failed. Trying to connect to Localhost MongoDB...");
+    try {
+      await mongoose.connect(localURI); // Simplified connection
+      console.log("MongoDB connected to Localhost Database");
+    } catch (localErr) {
+      console.error("Failed to connect to both Cluster and Localhost MongoDB:", localErr);
+      process.exit(1); // Exit the process with failure
+    }
+  }
+};
+
+connectToDatabase(); 
+ 
 
 const app = express();
 app.use(cookieParser());
