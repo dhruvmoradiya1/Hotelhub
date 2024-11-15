@@ -3,3 +3,4 @@ node_modules
 .vscode
 dist
 e2e-tests
+data

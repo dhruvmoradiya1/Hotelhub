@@ -1,37 +1,33 @@
-FROM node:20.18.0 AS build
+# devlopment image
+FROM node:20.18.0 AS devlopment
 
-WORKDIR /backend 
+WORKDIR /app 
 
 COPY package*.json .
 
-RUN npm install
+RUN npm ci
 
 COPY . .
 
 RUN npm run build
 
-FROM node:alpine AS final_image
+EXPOSE 3000
 
-WORKDIR /backend
+CMD ["npm", "run", "dev"]
 
-COPY --from=build /backend/package*.json ./
+# production image 
+FROM node:alpine AS production 
 
-COPY --from=build /backend/dist ./dist
+WORKDIR /app
 
-RUN npm install --only=production
+COPY --from=devlopment /app/package*.json ./
 
-COPY . .
+COPY --from=devlopment /app/dist ./dist
+
+RUN npm ci --only=production
 
 EXPOSE 3000
 
 CMD ["npm", "start"]
 
 # docker build -t mern_backend:latest .
-
-# docker run -d -p 3000:3000 --env-file .env --network mern_network -v mern_volume:/app/data --name mern_backend_app mern_backend:latest
-
-# docker run -d -p 3000:3000 --network mern_network -v mern_volume:/app/data --name mern_backend_app mern_backend:latest
-
-# docker run -d -p 3000:3000 --env-file .env --network mern_network -v "./testing_m_pro/backend:/app" --name mern_backend_app mern_backend:latest   
-
-# docker run -d -p 3000:3000 --network mern_network -v "D:/study/major minar project/testing_m_pro/backend:/app" --name mern_backend_app mern_backend:latest
