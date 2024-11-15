@@ -1,23 +1,29 @@
-FROM node:alpine AS final_build
+# ------------------- Stage 1: Build Stage ------------------------------
+FROM node:21 AS frontend-builder
+# Set the working directory to /app
+WORKDIR /app
 
-WORKDIR /frontend 
+# Copy the package.json and package-lock.json for dependency installation
+COPY package*.json ./
 
-COPY package*.json .
+# Install dependencies
+RUN npm ci
 
-RUN npm install
-
+# Copy the rest of the application code
 COPY . .
 
+# ------------------- Stage 2: Final Stage ------------------------------
+FROM node:21-slim as final
+
+# Set the working directory to /app
+WORKDIR /app
+
+# Copy built assets and dependencies from frontend-builder stage
+COPY --from=frontend-builder /app .
+
+# Expose port 5173 for the Node.js application
 EXPOSE 5173
 
-CMD ["npm", "run", "dev"]		
+CMD ["npm", "run", "dev"]
 
-# docker build -t mern_frontend:latest .    
-
-# docker run -d -p 5173:5173 --env-file .env --network mern_network -v mern_volume:/app/data --name mern_frontend_app mern_frontend:latest
-
-# docker run -d -p 5173:5173 --network mern_network -v mern_volume:/app/data --name mern_frontend_app mern_frontend:latest
-
-# docker run -d -p 5173:5173 --env-file .env --network mern_network -v "./testing_m_pro/frontend:/app" --name mern_frontend_app mern_frontend:latest
-
-# docker run -d -p 5173:5173 --network mern_network -v "D:/study/major minar project/testing_m_pro/frontend:/app" --name mern_frontend_app mern_frontend:latest
+# docker build -t mern_frontend:latest .
