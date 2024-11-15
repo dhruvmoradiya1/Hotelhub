@@ -11,10 +11,6 @@ COPY . .
 
 RUN npm run build
 
-EXPOSE 3000
-
-CMD ["npm", "run", "dev"]
-
 # production image 
 FROM node:alpine AS production 
 
