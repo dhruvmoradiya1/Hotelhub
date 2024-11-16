@@ -4,3 +4,4 @@ node_modules
 dist
 e2e-tests
 data
+readme.md

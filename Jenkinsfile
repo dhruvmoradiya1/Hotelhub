@@ -1,22 +1,42 @@
-piepeline{
+pipeline {
 
-    agent any;
+    agent any
+ // agent { label 'worker' } 
 
     stages{
-        stage('code pull from github'){
+        stage('Clone Repository'){
             steps{
-                git url: "https://github.com/dhruvmoradiya1/Hotelhub.git" branch: "dev"
-                echo 'Building the project'
+                git url: "https://github.com/dhruvmoradiya1/Hotelhub.git", branch: "dev"
             }
         }
-        stage('Build & Test'){
+        stage('Build Frontend Image'){
             steps{
-                echo 'Testing the project'
+                sh "docker build -t mern-frontend:latest ./frontend"
             }
         }
-        stage('Deploy'){
+        stage('Build Backend Image'){
             steps{
-                echo 'Deploying the project'
+                sh "docker build -t mern-backend:latest ./backend"
+            }
+        }
+
+        stage("Push Docker Images"){
+            steps{
+                 withCredentials([usernamePassword(
+                    credentialsId:"dockerhubid",
+                    usernameVariable:"dockerHubUser", 
+                    passwordVariable:"dockerHubPass")]){
+                sh 'echo $dockerHubPass | docker login -u $dockerHubUser --password-stdin'
+                sh "docker image tag mern-frontend:latest ${env.dockerHubUser}/mern-frontend:latest"
+                sh "docker image tag mern-backend:latest ${env.dockerHubUser}/mern-backend:latest"
+                sh "docker push ${env.dockerHubUser}/mern-frontend:latest"
+                sh "docker push ${env.dockerHubUser}/mern-backend:latest"
+                }
+            }
+        }
+        stage('Deploy Application'){
+            steps{
+                sh "docker compose down && docker compose up -d --build"
             }
         }
     }

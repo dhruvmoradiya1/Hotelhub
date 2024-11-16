@@ -2,6 +2,7 @@ version: '3'
 
 services:
   mongo:
+    container_name: mongo
     image: mongo:7.0.12
     ports:
       - "27017:27017"
@@ -11,9 +12,8 @@ services:
       - mern-network     
 
   backend:
-    build:
-      context: ./backend
-      dockerfile: Dockerfile
+    image: dhruvmoradiya69000/mern-backend:latest
+    container_name: backend
     restart: unless-stopped
     ports:
       - "3000:3000"
@@ -25,9 +25,8 @@ services:
       - mongo  
 
   frontend:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile  
+    image: dhruvmoradiya69000/mern-frontend:latest
+    container_name: frontend
     restart: unless-stopped  
     ports:
       - "5173:5173"
@@ -42,8 +41,5 @@ services:
 networks:
   mern-network:
     driver: bridge
-
-volumes:
-  mongo-data:
     # docker-compose up --build -d
 
