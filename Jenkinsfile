@@ -6,7 +6,7 @@ pipeline {
     stages{
         stage('Clone Repository'){
             steps{
-                git url: "https://github.com/dhruvmoradiya1/Hotelhub.git", branch: "dev"
+                git url: "https://github.com/dhruvmoradiya1/Hotelhub.git", branch: "main"
             }
         }
         stage('Build Frontend Image'){
