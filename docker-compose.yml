@@ -12,8 +12,8 @@ services:
       - mern-network     
 
   backend:
+    image: mern-backend:latest
     container_name: backend
-    build: ./backend
     restart: unless-stopped
     ports:
       - "3000:3000"
@@ -25,8 +25,8 @@ services:
       - mongo  
 
   frontend:
+    image: mern-frontend:latest
     container_name: frontend
-    build: ./frontend 
     restart: unless-stopped  
     ports:
       - "5173:5173"
