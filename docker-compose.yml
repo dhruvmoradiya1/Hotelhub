@@ -12,7 +12,7 @@ services:
       - mern-network     
 
   backend:
-    image: mern-backend:latest
+    image: dhruvmoradiya69000/mern-backend:latest
     container_name: backend
     restart: unless-stopped
     ports:
@@ -25,7 +25,7 @@ services:
       - mongo  
 
   frontend:
-    image: mern-frontend:latest
+    image: dhruvmoradiya69000/mern-frontend:latest
     container_name: frontend
     restart: unless-stopped  
     ports:
